@@ -1,0 +1,12 @@
+#!/bin/bash
+
+location="./output/images"
+kernel="$location/bzImage"
+initrd="$location/rootfs.cpio"
+
+[ "$#" -ne 1 ] && { echo "Usage: $0 <number of tap device>"; exit 123; }
+
+qemu-system-x86_64 \
+    -kernel $kernel -initrd $initrd \
+    -nographic -serial mon:stdio -append "console=ttyS0" \
+    -net nic,macaddr=52:54:00:12:34:0$1 -net tap,ifname=tap$1,script=no,downscript=no
